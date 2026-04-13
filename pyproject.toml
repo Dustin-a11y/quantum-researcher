@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quantum-researcher"
+version = "0.1.0"
+description = "Quantum-enhanced research agent — Grover search, quantum walks, and oracle encoding for √N speedup on knowledge discovery"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "Coinkong", email = "dustin@chefsattraction.com" },
+]
+keywords = ["quantum", "research", "grover", "quantum-walk", "knowledge-graph", "ai-agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "networkx>=3.0",
+    "httpx>=0.24",
+    "fastapi>=0.100",
+    "uvicorn>=0.20",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+quantum = ["qiskit>=1.0"]
+qmg = ["quantum-memory-graph>=1.0"]
+all = ["qiskit>=1.0", "quantum-memory-graph>=1.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "pytest-cov>=4.0",
+    "ruff>=0.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/Dustin-a11y/quantum-researcher"
+Repository = "https://github.com/Dustin-a11y/quantum-researcher"
+Issues = "https://github.com/Dustin-a11y/quantum-researcher/issues"
+
+[project.scripts]
+quantum-researcher = "quantum_researcher.__main__:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
