@@ -24,7 +24,17 @@ class SourceResult:
 class WebSource:
     """Fetch and extract text from web pages."""
 
+    # Only allow http/https schemes
+    ALLOWED_SCHEMES = ('http://', 'https://')
+    MAX_URLS = 100
+
     def __init__(self, urls: List[str], extract_fn: Optional[Callable] = None):
+        if len(urls) > self.MAX_URLS:
+            raise ValueError(f"Max {self.MAX_URLS} URLs per source")
+        # Validate URLs — no file://, ftp://, etc.
+        for url in urls:
+            if not any(url.lower().startswith(s) for s in self.ALLOWED_SCHEMES):
+                raise ValueError(f"URL must start with http:// or https://: {url[:50]}")
         self.urls = urls
         self.extract_fn = extract_fn or self._default_extract
 
@@ -126,18 +136,36 @@ class JSONSource:
 class FileSource:
     """Read text files from a directory."""
 
-    def __init__(self, paths: List[str], encoding: str = "utf-8"):
+    # Allowed base directories to prevent path traversal
+    ALLOWED_BASES = None  # Set to list of allowed dirs to restrict, e.g. ['/home/dt/data']
+    MAX_FILE_SIZE = 1_000_000  # 1MB max per file
+
+    def __init__(self, paths: List[str], encoding: str = "utf-8",
+                 allowed_bases: Optional[List[str]] = None):
         self.paths = paths
         self.encoding = encoding
+        self.allowed_bases = allowed_bases or self.ALLOWED_BASES
+
+    def _is_allowed(self, path: str) -> bool:
+        """Check path against allowed base directories."""
+        import os
+        if self.allowed_bases is None:
+            return True  # No restriction
+        real = os.path.realpath(path)
+        return any(real.startswith(os.path.realpath(b)) for b in self.allowed_bases)
 
     async def fetch(self) -> List[SourceResult]:
         import os
         results = []
         for path in self.paths:
+            if not self._is_allowed(path):
+                continue
             if os.path.isfile(path):
                 try:
+                    if os.path.getsize(path) > self.MAX_FILE_SIZE:
+                        continue
                     with open(path, encoding=self.encoding) as f:
-                        text = f.read()
+                        text = f.read(self.MAX_FILE_SIZE)
                     if text.strip():
                         results.append(SourceResult(
                             text=text[:50000],
@@ -148,12 +176,16 @@ class FileSource:
                 except Exception:
                     continue
             elif os.path.isdir(path):
-                for fname in os.listdir(path):
+                for fname in sorted(os.listdir(path))[:500]:  # cap directory listing
                     fpath = os.path.join(path, fname)
+                    if not self._is_allowed(fpath):
+                        continue
                     if os.path.isfile(fpath) and fname.endswith(('.txt', '.md', '.py', '.json')):
                         try:
+                            if os.path.getsize(fpath) > self.MAX_FILE_SIZE:
+                                continue
                             with open(fpath, encoding=self.encoding) as f:
-                                text = f.read()
+                                text = f.read(self.MAX_FILE_SIZE)
                             if text.strip():
                                 results.append(SourceResult(
                                     text=text[:50000],

@@ -20,8 +20,8 @@ class SimpleEmbedder:
         self._idf: Optional[np.ndarray] = None
 
     def _hash_token(self, token: str) -> int:
-        """Deterministic hash to dimension index."""
-        h = int(hashlib.md5(token.encode()).hexdigest(), 16)
+        """Deterministic hash to dimension index (not security-sensitive)."""
+        h = int(hashlib.sha256(token.encode()).hexdigest(), 16)
         return h % self.dim
 
     def embed(self, text: str) -> np.ndarray:
