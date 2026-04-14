@@ -1,0 +1,98 @@
+[
+  {
+    "n": 64,
+    "n_relevant": 3,
+    "grover": {
+      "method": "grover",
+      "found": 3,
+      "time_s": 0.0002467450685799122,
+      "iterations": 4,
+      "method_detail": "classical_simulation"
+    },
+    "classical": {
+      "method": "classical_linear",
+      "found": 3,
+      "time_s": 7.293187081813812e-06
+    },
+    "embedding": {
+      "method": "embedding_search",
+      "found": 3,
+      "time_s": 0.000269819051027298,
+      "threshold": 0.3
+    },
+    "speedup_vs_classical": 0.03,
+    "theoretical_sqrt_speedup": 2.67
+  },
+  {
+    "n": 256,
+    "n_relevant": 12,
+    "grover": {
+      "method": "grover",
+      "found": 12,
+      "time_s": 0.0002669929526746273,
+      "iterations": 4,
+      "method_detail": "classical_simulation"
+    },
+    "classical": {
+      "method": "classical_linear",
+      "found": 12,
+      "time_s": 2.0558945834636688e-05
+    },
+    "embedding": {
+      "method": "embedding_search",
+      "found": 12,
+      "time_s": 0.001033636974170804,
+      "threshold": 0.3
+    },
+    "speedup_vs_classical": 0.08,
+    "theoretical_sqrt_speedup": 1.33
+  },
+  {
+    "n": 1024,
+    "n_relevant": 51,
+    "grover": {
+      "method": "grover",
+      "found": 0,
+      "time_s": 0.0007786969654262066,
+      "iterations": 4,
+      "method_detail": "classical_simulation"
+    },
+    "classical": {
+      "method": "classical_linear",
+      "found": 51,
+      "time_s": 7.845787331461906e-05
+    },
+    "embedding": {
+      "method": "embedding_search",
+      "found": 51,
+      "time_s": 0.004116215044632554,
+      "threshold": 0.3
+    },
+    "speedup_vs_classical": 0.1,
+    "theoretical_sqrt_speedup": 0.63
+  },
+  {
+    "n": 4096,
+    "n_relevant": 204,
+    "grover": {
+      "method": "grover",
+      "found": 0,
+      "time_s": 0.002679728902876377,
+      "iterations": 4,
+      "method_detail": "classical_simulation"
+    },
+    "classical": {
+      "method": "classical_linear",
+      "found": 204,
+      "time_s": 0.0003059559967368841
+    },
+    "embedding": {
+      "method": "embedding_search",
+      "found": 204,
+      "time_s": 0.01615774305537343,
+      "threshold": 0.3
+    },
+    "speedup_vs_classical": 0.11,
+    "theoretical_sqrt_speedup": 0.31
+  }
+]
